@@ -1,3 +1,4 @@
 .idea/
 *.jpg
 *.pyc
+/www/bower_components/file-saver/nbproject/private/

@@ -55,7 +55,12 @@ class ChangeDetector(Thread):
             self.camera.close()
 
         # setting resolution and framerate at construction saves time
-        self.camera = PiCamera(resolution = (self.safe_width(self.config["img_width"]), self.safe_height(self.config["img_height"])),framerate = self.config["frame_rate"])
+        # ToDo: always capture at either mode 1 or 2, do not reduce resolution
+        # ToDo: use numpy to crop image to desired size so as not to loose any resolution
+        if self.config["sensor_mode"] = 2:
+            self.camera = PiCamera(resolution = (sensor_mode=2, resolution = (3280, 2464),framerate = self.config["frame_rate"])
+        else:
+            self.camera = PiCamera(resolution = (sensor_mode=1, resolution = (1920, 1080),framerate = self.config["frame_rate"])
         time.sleep(1)
 		
         if self.config["fix_camera_settings"] is 1:
@@ -307,3 +312,9 @@ class ChangeDetector(Thread):
         else:
             return ChangeDetector.safe_height(height-1)
 
+    def crop_img(img, width, height):
+        img_width = img.shape[1]
+        img_height = img.shape[0]
+
+        return img[np.maximum(0, (img.shape[0]-height)/2):np.minimum(img.shape[0],(img.shape[0]+height)/2), np.maximum(0, (img.shape[1]-width)/2):np.minimum(img.shape[1],(img.shape[1]+width)/2)]
+                              
