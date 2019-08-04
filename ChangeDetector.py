@@ -32,6 +32,7 @@ class ChangeDetector(Thread):
         self.lowResStream = None
         self.initialise_camera()
 
+        # ToDo: what's the point of this?
         self.minWidth = self.config["min_width"]
         self.maxWidth = self.config["max_width"]
         self.minHeight = self.config["min_height"]
@@ -54,13 +55,14 @@ class ChangeDetector(Thread):
         if self.camera is not None:
             self.camera.close()
 
-        # setting resolution and framerate at construction saves time
+        # setting framerate and resolution at construction saves time
         # ToDo: always capture at either mode 1 or 2, do not reduce resolution
+        # ToDo: get sensor max-resolution or camera module version to determine maximum resolution
         # ToDo: use numpy to crop image to desired size so as not to loose any resolution
-        if self.config["sensor_mode"] = 2:
-            self.camera = PiCamera(resolution = (sensor_mode=2, resolution = (3280, 2464),framerate = self.config["frame_rate"])
+        if self.config["sensor_mode"] == 2:
+            self.camera = PiCamera(sensor_mode=2, resolution = (3280, 2464),framerate = self.config["frame_rate"])
         else:
-            self.camera = PiCamera(resolution = (sensor_mode=1, resolution = (1920, 1080),framerate = self.config["frame_rate"])
+            self.camera = PiCamera(sensor_mode=1, resolution = (1920, 1080),framerate = self.config["frame_rate"])
         time.sleep(1)
 		
         if self.config["fix_camera_settings"] is 1:
@@ -296,6 +298,8 @@ class ChangeDetector(Thread):
     def get_current_image(self):
         return self.currentImage.copy()
 
+    # ToDo: what's the point? Sensor width of a v2 cm module is 3280 which is not a multiple of 32. So if one goes up to the next larger multiple, one gets an error. Going down will always waste some pixels.
+    # Maybe that's only worth it for the low res stream? But why?
     @staticmethod
     def safe_width(width):
         div = width % 32
@@ -312,6 +316,7 @@ class ChangeDetector(Thread):
         else:
             return ChangeDetector.safe_height(height-1)
 
+    # one could possibly crop in post
     def crop_img(img, width, height):
         img_width = img.shape[1]
         img_height = img.shape[0]
