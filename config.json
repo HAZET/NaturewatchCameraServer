@@ -1,9 +1,10 @@
 {
     "cv_width": 400,
     "cv_height": 300,
-    "sensor_mode": 1,
-    "img_width": 3280,
-    "img_height": 2464,
+    "sensor_mode": 2,
+    "crop": 1,
+    "img_width": 2000,
+    "img_height": 1500,
     "frame_rate": 10,
     "use_video_port": false,
     "camera_warmup": 2.5,
@@ -20,5 +21,5 @@
     "fix_camera_settings": 0,
     "iso": 800,
     "shutter_speed": 8000,
-    "log_level": "DEBUG"
+    "log_level": "INFO"
 }

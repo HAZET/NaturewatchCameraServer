@@ -56,9 +56,7 @@ class ChangeDetector(Thread):
             self.camera.close()
 
         # setting framerate and resolution at construction saves time
-        # ToDo: always capture at either mode 1 or 2, do not reduce resolution
         # ToDo: get sensor max-resolution or camera module version to determine maximum resolution
-        # ToDo: use numpy to crop image to desired size so as not to loose any resolution
         if self.config["sensor_mode"] == 2:
             self.camera = PiCamera(sensor_mode=2, resolution = (3280, 2464),framerate = self.config["frame_rate"])
         else:
@@ -171,6 +169,12 @@ class ChangeDetector(Thread):
             hi_res_image = imutils.rotate(hrs.array, angle=180)
         else:
             hi_res_image = hrs.array
+        # if crop is activated in config, cut a smaller image from the center of the original image with the given dimensions before saving
+        if self.config["crop"] is 1:
+            hi_res_image = self.crop_image(hi_res_image, self.config["img_width"], self.config["img_height"])
+
+        logging.debug('Saving %dx%d photo', hi_res_image.shape[1], hi_res_image.shape[0])
+            
         saving_thread = Thread(target=self.save_photo, args=[hi_res_image])
         saving_thread.start()
         self.numOfPhotos = self.numOfPhotos + 1
@@ -316,10 +320,7 @@ class ChangeDetector(Thread):
         else:
             return ChangeDetector.safe_height(height-1)
 
-    # one could possibly crop in post
-    def crop_img(img, width, height):
-        img_width = img.shape[1]
-        img_height = img.shape[0]
-
-        return img[np.maximum(0, (img.shape[0]-height)/2):np.minimum(img.shape[0],(img.shape[0]+height)/2), np.maximum(0, (img.shape[1]-width)/2):np.minimum(img.shape[1],(img.shape[1]+width)/2)]
+    @staticmethod
+    def crop_image(image, width, height):
+        return image[np.maximum(0, int((image.shape[0]-height)/2)):np.minimum(image.shape[0],int((image.shape[0]+height)/2)), np.maximum(0, int((image.shape[1]-width)/2)):np.minimum(image.shape[1],int((image.shape[1]+width)/2))]
                               
