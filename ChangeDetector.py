@@ -108,6 +108,7 @@ class ChangeDetector(Thread):
         filename = filename + ".jpg"
 
         try:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             cv2.imwrite("photos/" + filename, image)
         except Exception as e:
             logging.error('save_photo() error: ')
