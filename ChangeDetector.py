@@ -56,9 +56,12 @@ class ChangeDetector(Thread):
             self.camera.close()
 
         # setting framerate and resolution at construction saves time
-        # ToDo: get sensor max-resolution or camera module version to determine maximum resolution
         if self.config["sensor_mode"] == 2:
-            self.camera = PiCamera(sensor_mode=2, resolution = (3280, 2464),framerate = self.config["frame_rate"])
+            # set resolution depending on camera module
+            # if picamera.PiCamera().revision == 'imx291':
+                self.camera = PiCamera(sensor_mode=2, resolution = (3280, 2464),framerate = self.config["frame_rate"])
+            # else:
+            #    self.camera = PiCamera(sensor_mode=2, resolution = (2592, 1944),framerate = self.config["frame_rate"])
         else:
             self.camera = PiCamera(sensor_mode=1, resolution = (1920, 1080),framerate = self.config["frame_rate"])
         time.sleep(1)
@@ -83,7 +86,7 @@ class ChangeDetector(Thread):
         self.hiResCapture = PiRGBArray(self.camera)
         self.hiResStream = self.camera.capture_continuous(self.hiResCapture, format="bgr", use_video_port=self.config["use_video_port"])
 
-        logging.debug('Camera initialised with a resolution of %s and a framerate of %s', self.camera.resolution, self.camera.framerate)
+        logging.debug('Camera revision %s initialised with a resolution of %s and a framerate of %s', self.camera.revision, self.camera.resolution, self.camera.framerate)
         time.sleep(2)
         logging.info('Ready to capture photos')
 
