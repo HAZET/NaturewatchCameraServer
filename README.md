@@ -2,31 +2,51 @@
 
 This is a Python server script that captures a video stream from a Pi Camera and serves it as a .mjpg through a control website to another device. Part of the My Naturewatch project in collaboration with the RCA.
 
+
+## Enable SSH (to be automated) 
+
+Add a blank file named `ssh` to the boot folder on the SD card
+
+## Set up OTG ethernet (to be automated) 
+
+Follow the guide created by gbaman to set up OTG ethernet over USB serial https://gist.github.com/gbaman/975e2db164b3ca2b51ae11e45e8fd40a
+
 ## Requirements
 
-- OpenCV 3.1.0, along with OpenCV_Contrib modules. 
-- Python 3.4+
-- Raspbian Stretch
-- Picamera Python module 
-- Raspberry Pi Zero W or 3 (built-in WiFi)
-- 16GB+ SD card
+- Docker installed on Raspbian Stretch
+https://gist.github.com/mikevanis/e360f45e394674b59d663fdf0470d42f
 
-## Running the main script
+## Running the server
 
-Simply run the script with Python (as super user, so that the server can run on port 80). 
-
-	sudo python3 CameraServer.py 80
+Build the docker container
 	
-You can then access the camera controls at
-
-	http://localhost.local/
+	docker-compose build
 	
-Be sure to replace `localhost.local` with whatever hostname the Pi has.
+## Configuring the wifi setup
 
-## Compiling CSS for the web interface
-CSS for the web interface is written in Less.css. Therefore, a Less compiler must be used. You can use the [node compiler](http://lesscss.org/usage/) detailed on the Less website, or a standalone app such as [Koala](http://koala-app.com/).
+Run the config setup python script. This will reboot the pi
+	
+	sudo python3 NaturewatchCameraServer/cfgsetup.py
 
-JS is not currently being compiled / minified.
+## Access the interface
+    
+The website is then accessible through its hostname:
+
+	http://raspberrypi.local/
+	
+Be sure to replace `raspberrypi.local` with whatever hostname the Pi has.
+
+## Running tests
+
+You can run tests directly on the Raspberry pi to test the various functions of the
+software as well as the API. After building the container, run the tests with pytest.
+
+    docker run \
+    --device /dev/vcsm --device /dev/vchiq \
+    -p 5000:5000 \
+    -v ~/data:/naturewatch_camera_server/static/data \
+    naturewatchcameraserver \
+    pytest -v naturewatch_camera_server/
 
 ## Reporting bugs
 
@@ -44,3 +64,4 @@ testing your PR against the `dev` branch, which has more experimental features.
 ## Support
 
 If you require support, please head over to the [My Naturewatch Forum](https://mynaturewatch.net/forum).
+
