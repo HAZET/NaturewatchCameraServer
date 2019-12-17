@@ -13,8 +13,38 @@ Follow the guide created by gbaman to set up OTG ethernet over USB serial https:
 
 ## Requirements
 
-- Docker installed on Raspbian Stretch
-https://gist.github.com/mikevanis/e360f45e394674b59d663fdf0470d42f
+Docker on Raspbian Buster
+### Install some required packages first
+sudo apt update
+sudo apt install -y \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common
+
+### Get the Docker signing key for packages
+curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
+
+### Add the Docker official repo
+echo "deb [arch=armhf] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+     $(lsb_release -cs) stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list
+
+### Install Docker
+The aufs-package, part of the "recommended" packages, won't install on Buster just yet, because of missing pre-compiled kernel modules. Apparently, aufs is *not* a requirement, just a recommendation and it is debatable whether it should be. 
+
+Install Docker without the recommended packages by using the "--no-install-recommends" switch
+
+sudo apt update
+sudo apt install -y --no-install-recommends docker-ce
+
+### Install Docker Compose
+Some people recommend installing docker-compose via pip, but I had issues with that way. Modules weren't found. I didn't dig deeper since I found
+
+sudo apt install docker-compose
+
+does the trick.
 
 ## Running the server
 
@@ -47,21 +77,4 @@ software as well as the API. After building the container, run the tests with py
     -v ~/data:/naturewatch_camera_server/static/data \
     naturewatchcameraserver \
     pytest -v naturewatch_camera_server/
-
-## Reporting bugs
-
-Please provide as much information as possible. If you'd like to open an issue about a 
-possible bug, please do so here and include as much information as possible. 
-
-## Pull requests
-
-If you'd like to submit a pull request, please let us know whether you're submitting a
-new feature, or a bug fix. We have an internal release schedule, so please don't be
-offended if it takes us some time to fit your PR in! We will respond to every single 
-one of them and let you know if we're evaluating it for a full release. It's also worth 
-testing your PR against the `dev` branch, which has more experimental features.
-
-## Support
-
-If you require support, please head over to the [My Naturewatch Forum](https://mynaturewatch.net/forum).
 
