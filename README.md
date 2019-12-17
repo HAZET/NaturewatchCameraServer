@@ -39,6 +39,10 @@ Install Docker without the recommended packages by using the "--no-install-recom
 	sudo apt update
 	sudo apt install -y --no-install-recommends docker-ce
 
+### Enable Docker
+	sudo systemctl enable docker
+	sudo systemctl start docker
+
 ## Install Docker Compose
 Some people recommend installing docker-compose via pip, but I had issues with that way. Modules weren't found. I didn't dig deeper since I found
 
@@ -52,6 +56,7 @@ Add pi user to docker group and the video group
 
 	sudo usermod -aG docker $USER
 	sudo usermod -aG video $USER
+
 
 ## Running the server
 
