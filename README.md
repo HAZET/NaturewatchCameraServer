@@ -45,8 +45,10 @@ Install Docker without the recommended packages by using the "--no-install-recom
 
 ## Install Docker Compose
 Some people recommend installing docker-compose via pip, but I had issues with that way. Modules weren't found. I didn't dig deeper since I found
+
 	sudo apt install docker-compose
 does the trick. Test it with:
+
 	docker-compose --version
 
 ## Make sure the user has the neccessary rights
@@ -56,8 +58,16 @@ Add pi user to docker group and the video group
 	sudo usermod -aG docker $USER
 	sudo usermod -aG video $USER
 
+## Get the sources
+
+One way is by cloning the git-repository.
+	git  clone https://github.com/HAZET/NaturewatchCameraServer.git
 
 ## Running the server
+
+Change into the NatureWatchCameraServer directory.
+
+	cd NaturewatchCameraServer/
 
 Build the docker container
 	
