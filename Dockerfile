@@ -1,4 +1,5 @@
-FROM sgtwilko/rpi-raspbian-opencv:stretch-latest
+FROM sgtwilko/balenalib-rpi-raspbian-opencv:latest
+
 
 # Install python dependencies
 COPY requirements-pi.txt .
