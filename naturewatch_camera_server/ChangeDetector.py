@@ -61,8 +61,7 @@ class ChangeDetector(Thread):
         :return: none
         """
         self.cancelled = True
-# TODO: The camera shouldn't be closed here, that should be left to the CameraController
-        self.camera.close()
+        self.camera_controller.stop()
 
     @staticmethod
     def save_photo(image):
@@ -187,7 +186,6 @@ class ChangeDetector(Thread):
                     elif self.mode == "video":
                         self.camera_controller.wait_recording(self.config["video_duration_after_motion"])
                         self.logger.info("ChangeDetector: video capture completed")
-        # TODO: why 'with'?
                         with self.camera_controller.get_video_stream().lock:
                             self.file_saver.save_video(self.camera_controller.get_video_stream(), timestamp)
                         self.lastPhotoTime = self.get_fake_time()
@@ -200,7 +198,7 @@ class ChangeDetector(Thread):
                 self.logger.error("ChangeDetector: not receiving any images for motion detection!")
                 time.sleep(1)
 
-# TODO: Find out what this is required for, why ansd when the normal time cannot be used.
+# TODO: Find out what this is required for, why and when the normal time cannot be used.
     def get_fake_time(self):
         if self.device_time is not None:
             time_float = self.device_time + time.time() - self.device_time_start

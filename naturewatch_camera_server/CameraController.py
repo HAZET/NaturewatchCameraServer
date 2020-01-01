@@ -58,7 +58,6 @@ class CameraController(threading.Thread):
         if picamera_exists:
             # Use pi camera
             self.logger.info("CameraController: picamera module exists.")
-# TODO: is this the right place to initialise the camera? We cannot know at this point whether we are going to capture stills or videos
             self.initialise_picamera()
         else:
             # Use webcam
