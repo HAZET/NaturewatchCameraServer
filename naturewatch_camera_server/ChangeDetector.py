@@ -159,8 +159,6 @@ class ChangeDetector(Thread):
         elif self.mode == "photo":
             pass
         self.mode = "inactive"
-# TODO: required?
-        self.session_start_time = self.get_fake_time()
 
 # TODO: whether to use the video-port or not does not directly depend on the mode
 # In case video is requested, the video port will always be used for both resolutions
@@ -198,7 +196,6 @@ class ChangeDetector(Thread):
                 self.logger.error("ChangeDetector: not receiving any images for motion detection!")
                 time.sleep(1)
 
-# TODO: Find out what this is required for, why and when the normal time cannot be used.
     def get_fake_time(self):
         if self.device_time is not None:
             time_float = self.device_time + time.time() - self.device_time_start
